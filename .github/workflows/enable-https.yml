@@ -2,6 +2,8 @@ name: Enable portfolio HTTPS
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"
   push:
     paths:
       - ".github/workflows/enable-https.yml"
@@ -48,7 +50,8 @@ jobs:
 
           if [[ "$cert_state" != "approved" ]]; then
             echo "::warning::GitHub certificate is not approved yet (state: $cert_state)."
-            exit 2
+            echo "The workflow will check again automatically on the next scheduled run."
+            exit 0
           fi
 
           echo "Certificate approved. Enabling HTTPS enforcement..."
