@@ -9,17 +9,13 @@ Static portfolio site for **Fernando Nicolas Jr.**
 
 ## Deployment
 
-The repository includes a GitHub Pages workflow at `.github/workflows/pages.yml`. It publishes the repository root whenever `main` changes.
-
-GitHub requires Pages to be enabled for the repository and configured to use **GitHub Actions** as the publishing source. The `CNAME` file alone does not configure the custom domain in repository settings.
-
-After Pages is enabled, set the custom domain to:
+GitHub Pages is already enabled for this repository and publishes the static site from `main`. The custom-domain declaration is stored in `CNAME` as:
 
 ```
 porfoliokoto.online
 ```
 
-Then configure the domain's DNS records according to GitHub Pages' custom-domain instructions and enable HTTPS once GitHub finishes verifying the domain.
+GitHub's built-in Pages deployment handles publishing, so the repository intentionally does not include a second custom Pages deployment workflow.
 
 ## Validation
 
