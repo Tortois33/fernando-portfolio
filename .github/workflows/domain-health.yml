@@ -22,6 +22,17 @@ jobs:
           getent ahosts porfoliokoto.online || true
 
           echo
+          echo "=== DNS details ==="
+          echo "NS:"
+          dig +short NS porfoliokoto.online || true
+          echo "A:"
+          dig +short A porfoliokoto.online || true
+          echo "AAAA:"
+          dig +short AAAA porfoliokoto.online || true
+          echo "CAA:"
+          dig +short CAA porfoliokoto.online || true
+
+          echo
           echo "=== DNS: www ==="
           getent ahosts www.porfoliokoto.online || true
 
