@@ -1,0 +1,71 @@
+name: Validate portfolio
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Validate static portfolio
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+
+          const html = fs.readFileSync('index.html', 'utf8');
+          const cname = fs.readFileSync('CNAME', 'utf8').trim();
+
+          const fail = (message) => {
+            console.error('FAIL:', message);
+            process.exitCode = 1;
+          };
+
+          if (cname !== 'porfoliokoto.online') {
+            fail('CNAME must be porfoliokoto.online');
+          }
+
+          const required = [
+            '<title>Fernando Nicolas Jr. · Portfolio</title>',
+            '<link rel="canonical" href="https://porfoliokoto.online/">',
+            'https://vanguard-online.web.app/',
+            'id="contactForm"',
+            "const RESUME='data:application/pdf;base64,"
+          ];
+
+          for (const marker of required) {
+            if (!html.includes(marker)) fail('Missing required marker: ' + marker);
+          }
+
+          if (html.includes('vanguard-online--fresh-server-')) {
+            fail('Temporary Vanguard fresh-server URL is still present');
+          }
+
+          const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]);
+          const duplicates = [...new Set(ids.filter((id, i) => ids.indexOf(id) !== i))];
+          if (duplicates.length) {
+            fail('Duplicate HTML ids: ' + duplicates.join(', '));
+          }
+
+          const script = html.match(/<script>([\s\S]*?)<\/script>\s*<\/body>/i)?.[1];
+          if (!script) {
+            fail('Main inline script not found');
+          } else {
+            try {
+              new Function(script);
+            } catch (error) {
+              fail('JavaScript syntax error: ' + error.message);
+            }
+          }
+
+          if (!process.exitCode) console.log('PASS: portfolio static checks');
+          NODE
