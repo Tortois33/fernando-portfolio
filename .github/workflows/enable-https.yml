@@ -1,0 +1,68 @@
+name: Enable portfolio HTTPS
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/enable-https.yml"
+
+permissions:
+  contents: read
+  pages: write
+
+jobs:
+  enable-https:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check certificate and enforce HTTPS
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          api="https://api.github.com/repos/${GITHUB_REPOSITORY}/pages"
+          headers=(
+            -H "Accept: application/vnd.github+json"
+            -H "X-GitHub-Api-Version: 2026-03-10"
+          )
+
+          echo "Reading current GitHub Pages state..."
+          pages_json="$(curl -fsSL "${headers[@]}" "$api")"
+          echo "$pages_json" | jq '{html_url,cname,https_enforced,protected_domain_state,https_certificate}'
+
+          cert_state="$(echo "$pages_json" | jq -r '.https_certificate.state // "unknown"')"
+          enforced="$(echo "$pages_json" | jq -r '.https_enforced // false')"
+          cname="$(echo "$pages_json" | jq -r '.cname // ""')"
+
+          if [[ "$cname" != "porfoliokoto.online" ]]; then
+            echo "::error::Unexpected Pages custom domain: $cname"
+            exit 1
+          fi
+
+          if [[ "$enforced" == "true" ]]; then
+            echo "HTTPS is already enforced."
+            exit 0
+          fi
+
+          if [[ "$cert_state" != "approved" ]]; then
+            echo "::warning::GitHub certificate is not approved yet (state: $cert_state)."
+            exit 2
+          fi
+
+          echo "Certificate approved. Enabling HTTPS enforcement..."
+          response_code="$(curl -sS -o /tmp/enable-https-response.txt -w '%{http_code}'             -X PUT "${headers[@]}"             -H "Authorization: Bearer $GH_TOKEN"             -H "Content-Type: application/json"             "$api"             -d '{"https_enforced":true}')"
+
+          cat /tmp/enable-https-response.txt || true
+          echo "Update API status: $response_code"
+
+          if [[ "$response_code" != "204" ]]; then
+            echo "::error::GitHub did not accept HTTPS enforcement."
+            exit 1
+          fi
+
+          after="$(curl -fsSL "${headers[@]}" "$api")"
+          echo "$after" | jq '{html_url,cname,https_enforced,https_certificate}'
+
+          test "$(echo "$after" | jq -r '.https_enforced')" = "true"
+          echo "HTTPS enforcement enabled successfully."
