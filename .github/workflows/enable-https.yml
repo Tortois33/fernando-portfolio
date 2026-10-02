@@ -25,6 +25,7 @@ jobs:
           headers=(
             -H "Accept: application/vnd.github+json"
             -H "X-GitHub-Api-Version: 2026-03-10"
+            -H "Authorization: Bearer $GH_TOKEN"
           )
 
           echo "Reading current GitHub Pages state..."
