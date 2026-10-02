@@ -1,0 +1,38 @@
+name: Check portfolio domain
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/domain-health.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  domain-health:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check DNS and HTTP endpoints
+        shell: bash
+        run: |
+          set +e
+
+          echo "=== DNS: apex ==="
+          getent ahosts porfoliokoto.online || true
+
+          echo
+          echo "=== DNS: www ==="
+          getent ahosts www.porfoliokoto.online || true
+
+          echo
+          echo "=== HTTP: apex ==="
+          curl -sSIL --max-time 20 --connect-timeout 10 http://porfoliokoto.online/ || true
+
+          echo
+          echo "=== HTTPS: apex ==="
+          curl -sSIL --max-time 20 --connect-timeout 10 https://porfoliokoto.online/ || true
+
+          echo
+          echo "=== HTTPS: www ==="
+          curl -sSIL --max-time 20 --connect-timeout 10 https://www.porfoliokoto.online/ || true
