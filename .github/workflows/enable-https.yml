@@ -38,7 +38,7 @@ jobs:
           enforced="$(echo "$pages_json" | jq -r '.https_enforced // false')"
           cname="$(echo "$pages_json" | jq -r '.cname // ""')"
 
-          if [[ "$cname" != "porfoliokoto.online" ]]; then
+          if [[ "$cname" != "portfoliokoto.online" ]]; then
             echo "::error::Unexpected Pages custom domain: $cname"
             exit 1
           fi
