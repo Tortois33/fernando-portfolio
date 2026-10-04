@@ -30,8 +30,8 @@ jobs:
             process.exitCode = 1;
           };
 
-          if (cname !== 'porfoliokoto.online') {
-            fail('CNAME must be porfoliokoto.online');
+          if (cname !== 'portfoliokoto.online') {
+            fail('CNAME must be portfoliokoto.online');
           }
 
           const required = [
