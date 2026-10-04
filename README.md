@@ -2,7 +2,7 @@
 
 Static portfolio site for **Fernando Nicolas Jr.**
 
-- Primary domain: https://porfoliokoto.online/
+- Primary domain: https://portfoliokoto.online/
 - Repository: `Tortois33/fernando-portfolio`
 - Main entry point: `index.html`
 - Custom domain declaration: `CNAME`
@@ -12,7 +12,7 @@ Static portfolio site for **Fernando Nicolas Jr.**
 GitHub Pages is already enabled for this repository and publishes the static site from `main`. The custom-domain declaration is stored in `CNAME` as:
 
 ```
-porfoliokoto.online
+portfoliokoto.online
 ```
 
 GitHub's built-in Pages deployment handles publishing, so the repository intentionally does not include a second custom Pages deployment workflow.
