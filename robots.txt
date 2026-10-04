@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://porfoliokoto.online/sitemap.xml
+Sitemap: https://portfoliokoto.online/sitemap.xml
