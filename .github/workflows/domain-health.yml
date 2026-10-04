@@ -19,31 +19,31 @@ jobs:
           set +e
 
           echo "=== DNS: apex ==="
-          getent ahosts porfoliokoto.online || true
+          getent ahosts portfoliokoto.online || true
 
           echo
           echo "=== DNS details ==="
           echo "NS:"
-          dig +short NS porfoliokoto.online || true
+          dig +short NS portfoliokoto.online || true
           echo "A:"
-          dig +short A porfoliokoto.online || true
+          dig +short A portfoliokoto.online || true
           echo "AAAA:"
-          dig +short AAAA porfoliokoto.online || true
+          dig +short AAAA portfoliokoto.online || true
           echo "CAA:"
-          dig +short CAA porfoliokoto.online || true
+          dig +short CAA portfoliokoto.online || true
 
           echo
           echo "=== DNS: www ==="
-          getent ahosts www.porfoliokoto.online || true
+          getent ahosts www.portfoliokoto.online || true
 
           echo
           echo "=== HTTP: apex ==="
-          curl -sSIL --max-time 20 --connect-timeout 10 http://porfoliokoto.online/ || true
+          curl -sSIL --max-time 20 --connect-timeout 10 http://portfoliokoto.online/ || true
 
           echo
           echo "=== HTTPS: apex ==="
-          curl -sSIL --max-time 20 --connect-timeout 10 https://porfoliokoto.online/ || true
+          curl -sSIL --max-time 20 --connect-timeout 10 https://portfoliokoto.online/ || true
 
           echo
           echo "=== HTTPS: www ==="
-          curl -sSIL --max-time 20 --connect-timeout 10 https://www.porfoliokoto.online/ || true
+          curl -sSIL --max-time 20 --connect-timeout 10 https://www.portfoliokoto.online/ || true
